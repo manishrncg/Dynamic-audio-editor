@@ -1,0 +1,15 @@
+@import './bootstrap.scss';
+
+body {
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+    background-color: #ccc;
+}
+
+.page-container{
+    margin: 50px 100px;
+    background-color: #fff;
+    width: calc(100% - 200px);
+    height: 100%;
+    border-radius: 5px;
+}
