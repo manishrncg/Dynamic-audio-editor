@@ -8,7 +8,7 @@ import '../static/css/form.scss';
 const Home = props => {
     const {inputValue, updateInputValue} = props;
     useEffect(() => {
-        if(inputValue){
+        // if(inputValue){
             var playlist = init(
                 {
                     samplesPerPixel: 3000,
@@ -32,15 +32,22 @@ const Home = props => {
             // you can pass your own event emitter
             EventEmitter()
             );
+            // var list = [];
+            // for (var i = 0; i < inputValue.length; i++) {
+            //     var obj = {
+            //         src: inputValue[i],
+            //         name: inputValue[i].name
+            //     }
+            //     list.push(obj);
+            // }
 
-            playlist
-            .load([
-            ])
-            .then(function() {
-              // can do stuff with the playlist.
-               //initialize the WAV exporter.
-              playlist.initExporter();
-            });
+            // playlist
+            // .load([])
+            // .then(function() {
+            //     // can do stuff with the playlist.
+            //     //initialize the WAV exporter.
+            //     playlist.initExporter();
+            // });
             
             // retrieves the event emitter the playlist is using.
             var ee = playlist.getEventEmitter();
@@ -58,7 +65,7 @@ const Home = props => {
            var $audioEnd = $container.find('.audio-end');
            var $time = $container.find('.audio-pos');
            
-           var format = "hh:mm:ss.uuu";
+           var format = "seconds";
            var startTime = 0;
            var endTime = 0;
            var audioPos = 0;
@@ -411,7 +418,7 @@ const Home = props => {
            });
            
            ee.on('audiorenderingfinished', function (type, data) {
-             if (type == 'wav'){
+             if (type === 'wav'){
                if (downloadUrl) {
                  window.URL.revokeObjectURL(downloadUrl);
                }
@@ -431,12 +438,12 @@ const Home = props => {
              }
            });            
 
-        }
+        // }
     }, [inputValue])
     return (
-        <div className="upload-form-container">
-            <p>Upload any audio</p>
-            <div className="input-container">
+        <div className="upload-form-container text-center">            
+            <h4 className="heading">Upload audio files</h4>
+            <div className="input-container parent-for-center-div">
                 <input 
                     type="file" 
                     className="input audio" 
@@ -444,6 +451,10 @@ const Home = props => {
                     multiple={true}
                 />
             </div>
+            <div className="parent-for-center-div or">
+                <span>OR</span>
+            </div>
+            <div class="track-drop parent-for-center-div"></div>
         </div>
     )
 }

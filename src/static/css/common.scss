@@ -12,4 +12,50 @@ body {
     width: calc(100% - 200px);
     height: 100%;
     border-radius: 5px;
+    .upload-form-container{
+        .heading{
+            text-align: center;
+            text-decoration: underline;
+        }
+        .input-container{
+            display: inline-block;
+            margin-right: 100px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            height: 200px;
+            width: 300px;
+            input{
+                background: #eee;
+            }
+        }
+        .or{
+            display: inline-block;
+            height: 200px;
+        }
+        .track-drop{
+            display: inline-block;
+            border: 2px dashed blue;
+            height: 200px;
+            width: 300px;
+            padding: 10px;
+            margin-left: 100px;
+            &::before {
+                content: "Drop audio file(s) here!";
+            }
+        }
+        .parent-for-center-div{
+            position: relative;
+            &>*, &::before{
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+            }
+        }
+    }
+
+    .text-center{
+        text-align: center;
+    }
 }

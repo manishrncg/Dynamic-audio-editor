@@ -1,53 +1,7 @@
-import React, {useEffect} from 'react';
-import {init} from 'waveform-playlist';
+import React from 'react';
 
-import '../static/css/playlist.scss';
-
-const Home = props => {
-    const {inputFiles} = props;
-    useEffect(() => {
-        var playlist = init({
-            samplesPerPixel: 3000,
-            mono: true,
-            waveHeight: 100,
-            container: document.getElementById("playlist"),
-            state: "cursor",
-            colors: {
-              waveOutlineColor: "#E0EFF1",
-              timeColor: "grey",
-              fadeColor: "black"
-            },
-            controls: {
-              show: true,
-              width: 200
-            },
-            zoomLevels: [500, 1000, 3000, 5000]
-          });
-          
-          playlist
-            .load([
-            //   {
-            //     src: "media/audio/BassDrums30.mp3",
-            //     name: "Drums",
-            //     start: 8.5,
-            //     fadeIn: {
-            //       duration: 0.5
-            //     },
-            //     fadeOut: {
-            //       shape: "logarithmic",
-            //       duration: 0.5
-            //     }
-            //   }
-            ])
-            .then(function() {
-              // can do stuff with the playlist.
-               //initialize the WAV exporter.
-              playlist.initExporter();
-            });
-    }, [inputFiles])
-
+const PlayerControls = () => {
     return (
-        <>
         <div id="top-bar" className="playlist-top-bar">
             <div className="playlist-toolbar">
                 <div className="btn-group">
@@ -115,46 +69,7 @@ const Home = props => {
                 </div>
             </div>
         </div>
-        <div id="playlist">
-        </div>
-        {/*  */}
-        <div className="playlist-bottom-bar">
-  <form className="form-inline">
-  <select className="time-format form-control">
-    <option value="seconds">seconds</option>
-    <option value="thousandths">thousandths</option>
-    <option value="hh:mm:ss">hh:mm:ss</option>
-    <option value="hh:mm:ss.u">hh:mm:ss + tenths</option>
-    <option value="hh:mm:ss.uu">hh:mm:ss + hundredths</option>
-    <option value="hh:mm:ss.uuu" selected="selected">hh:mm:ss + milliseconds</option>
-  </select>
-  <input type="text" className="audio-start input-small form-control"/>
-  <input type="text" className="audio-end form-control"/>
-  <label className="audio-pos">00:00:00</label>
-</form>
-
-  <form className="form-inline">
-    <div className="form-group">
-      <label for="master-gain">Master Volume</label>
-      <input type="range" min="0" max="100" value="100" className="master-gain form-control" id="master-gain"/>
-    </div>
-    <div className="checkbox">
-      <label>
-        <input type="checkbox" className="automatic-scroll"/> Automatic Scroll
-      </label>
-    </div>
-  </form>
-  <form className="form-inline">
-    <div className="control-group">
-      <label for="time">Seek to time :</label>
-      <input type="number" className="form-control" id="seektime"/>
-      <span className="btn btn-primary btn-seektotime">Seek !</span>
-    </div>
-  </form>
-  
-</div>
-        </>
     )
 }
 
-export default Home;
+export default PlayerControls;
