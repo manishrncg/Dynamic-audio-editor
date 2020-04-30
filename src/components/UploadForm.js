@@ -32,6 +32,15 @@ const Home = props => {
             // you can pass your own event emitter
             EventEmitter()
             );
+
+            playlist
+            .load([
+            ])
+            .then(function() {
+              // can do stuff with the playlist.
+               //initialize the WAV exporter.
+              playlist.initExporter();
+            });
             
             // retrieves the event emitter the playlist is using.
             var ee = playlist.getEventEmitter();

@@ -41,6 +41,8 @@ const Home = props => {
             ])
             .then(function() {
               // can do stuff with the playlist.
+               //initialize the WAV exporter.
+              playlist.initExporter();
             });
     }, [inputFiles])
 
