@@ -43,6 +43,9 @@ body {
             &::before {
                 content: "Drop audio file(s) here!";
             }
+            &.drag-enter {
+                border: 2px solid orange;
+            }
         }
         .parent-for-center-div{
             position: relative;

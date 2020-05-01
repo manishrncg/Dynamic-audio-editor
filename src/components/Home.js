@@ -11,7 +11,7 @@ const Home = () => {
     return (
         <PageContainer componentClass="home">
             <h2 className="text-center">Dynamic Audio Editor</h2>
-            <AudioPlayer filesArr={inputFiles} />
+            <AudioPlayer inputValue={inputFiles} />
             <UploadForm inputValue={inputFiles} updateInputValue={updateFile} />                  
         </PageContainer>
     )
