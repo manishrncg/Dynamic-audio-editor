@@ -7,53 +7,58 @@ import '../static/css/form.scss';
 
 const Home = props => {
     const {inputValue, updateInputValue} = props;
-    useEffect(() => {
-        // if(inputValue){
-            var playlist = init(
-                {
-                    samplesPerPixel: 3000,
-                    mono: true,
-                    waveHeight: 100,
-                    container: document.getElementById("playlist"),
-                    state: "cursor",
-                    colors: {
-                      waveOutlineColor: "#E0EFF1",
-                      timeColor: "grey",
-                      fadeColor: "black"
-                    },
-                    controls: {
-                      show: true,
-                      width: 200
-                    },
-                    zoomLevels: [500, 1000, 3000, 5000],
-                    play:"start",
-                  },
-            
+    let playlist = null;
+    if(document.getElementById("playlist")){
+        playlist = init(
+            {
+                samplesPerPixel: 3000,
+                mono: true,
+                waveHeight: 100,
+                container: document.getElementById("playlist"),
+                state: "cursor",
+                colors: {
+                    waveOutlineColor: "#E0EFF1",
+                    timeColor: "grey",
+                    fadeColor: "black"
+                },
+                controls: {
+                    show: true,
+                    width: 200
+                },
+                zoomLevels: [500, 1000, 3000, 5000],
+                play:"start",
+            },
+        
             // you can pass your own event emitter
             EventEmitter()
-            );
-            // var list = [];
-            // for (var i = 0; i < inputValue.length; i++) {
-            //     var obj = {
-            //         src: inputValue[i],
-            //         name: inputValue[i].name
-            //     }
-            //     list.push(obj);
-            // }
+        );   
+    }
+    
+    useEffect(() => {
+        if(inputValue && playlist){
+            
+            var list = [];
+            for (var i = 0; i < inputValue.length; i++) {
+                var obj = {
+                    src: inputValue[i],
+                    name: inputValue[i].name
+                }
+                list.push(obj);
+            }
 
-            // playlist
-            // .load([])
-            // .then(function() {
-            //     // can do stuff with the playlist.
-            //     //initialize the WAV exporter.
-            //     playlist.initExporter();
-            // });
+            playlist
+            .load(list)
+            .then(function() {
+                // can do stuff with the playlist.
+                //initialize the WAV exporter.
+                playlist.initExporter();
+            });
             
             // retrieves the event emitter the playlist is using.
             var ee = playlist.getEventEmitter();
-            for (var i = 0; i < inputValue.length; i++) {
-                ee.emit("newtrack", inputValue[i]);
-            }
+            // for (var i = 0; i < inputValue.length; i++) {
+            //     ee.emit("newtrack", inputValue[i]);
+            // }
             // Emmiter js
             /*
             * This script is provided to give an example how the playlist can be controlled using the event emitter.
@@ -438,8 +443,8 @@ const Home = props => {
              }
            });            
 
-        // }
-    }, [inputValue])
+        }
+    }, [inputValue, playlist])
     return (
         <div className="upload-form-container text-center">            
             <h4 className="heading">Upload audio files</h4>
