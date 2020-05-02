@@ -48,10 +48,6 @@ const PlayerControls = props => {
             ee.emit("zoomout");
         }
     };
-    // const clearList = () => {
-    //     updateLooping(false);
-    //     ee.emit("clear");
-    // };
     const cursorUpdate = e => {
         ee.emit("statechange", "cursor");
         toggleActive(e.target);

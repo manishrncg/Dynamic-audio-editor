@@ -101,10 +101,6 @@ const PlayerFooter = props => {
             document.querySelector(".sound-status").innerHTML = status;
         }
         
-        // function displayLoadingData(data) {
-        //     var info = $("<div/>").append(data);
-        //     // document.querySelector(".loading-data").append(info);
-        // }
         ee.on("select", updateSelect);
         
         ee.on("timeupdate", updateTime);
@@ -124,37 +120,6 @@ const PlayerFooter = props => {
         ee.on("mastervolumechange", function(volume) {
             displaySoundStatus("Master volume now has volume " + volume + ".");
         });
-        
-        
-        // var audioStates = ["uninitialized", "loading", "decoding", "finished"];
-        
-        ee.on("audiorequeststatechange", function(state, src) {
-            var name = src;
-        
-            if (src instanceof File) {
-            name = src.name;
-            }
-        
-            // displayLoadingData("Track " + name + " is in state " + audioStates[state]);
-        });
-        
-        ee.on("loadprogress", function(percent, src) {
-            var name = src;
-        
-            if (src instanceof File) {
-            name = src.name;
-            }
-        
-            // displayLoadingData("Track " + name + " has loaded " + percent + "%");
-        });
-        
-        // ee.on("audiosourcesloaded", function() {
-        //   displayLoadingData("Tracks have all finished decoding.");
-        // });
-        
-        // ee.on("audiosourcesrendered", function() {
-        //   displayLoadingData("Tracks have been rendered");
-        // });
            
         ee.on('audiorenderingfinished', function (type, data) {
             if (type === 'wav'){
@@ -185,22 +150,17 @@ const PlayerFooter = props => {
             </form>
             <form className="form-inline">
                 <div className="form-group">
-                <label htmlFor="master-gain">Master Volume</label>
-                <input 
-                    type="range" 
-                    min="0" 
-                    max="100" 
-                    className="master-gain form-control" 
-                    id="master-gain"
-                    defaultValue="100" 
-                    onChange={e => masterGain(e)}
-                />
+                    <label htmlFor="master-gain">Master Volume</label>
+                    <input 
+                        type="range" 
+                        min="0" 
+                        max="100" 
+                        className="master-gain form-control" 
+                        id="master-gain"
+                        defaultValue="100" 
+                        onChange={e => masterGain(e)}
+                    />
                 </div>
-                {/* <div className="checkbox">
-                <label>
-                    <input type="checkbox" className="automatic-scroll" /> Automatic Scroll
-                </label>
-                </div> */}
                 <div class="sound-status"></div>
             </form>
             <form className="form-inline">
