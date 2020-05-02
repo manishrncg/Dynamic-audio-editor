@@ -5,7 +5,7 @@ const PlayerFooter = props => {
     const [seekTime, UpdateSeekTime] = useState();
     const [format, UpdateFormat] = useState("seconds");
     let audioPos = 0, startTime = 0, endTime = 0;
-    let downloadUrl = undefined;
+    // let downloadUrl = undefined;
     // retrieves the event emitter the playlist is using.
     const ee = playlist && playlist.getEventEmitter();
     const cueFormatters = () => {
@@ -123,11 +123,7 @@ const PlayerFooter = props => {
            
         ee.on('audiorenderingfinished', function (type, data) {
             if (type === 'wav'){
-                if (downloadUrl) {
-                    window.URL.revokeObjectURL(downloadUrl);
-                }
-            
-                downloadUrl = window.URL.createObjectURL(data);
+                let downloadUrl = window.URL.createObjectURL(data);
                 displayDownloadLink(downloadUrl);
             }
         });
@@ -161,7 +157,7 @@ const PlayerFooter = props => {
                         onChange={e => masterGain(e)}
                     />
                 </div>
-                <div class="sound-status"></div>
+                <div className="sound-status"></div>
             </form>
             <form className="form-inline">
                 <div className="control-group">

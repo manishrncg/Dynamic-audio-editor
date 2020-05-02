@@ -33,6 +33,7 @@ const Home = () => {
                 },
                 zoomLevels: [500, 1000, 3000, 5000],
                 play:"start",
+                timescale: true,
             },
         
             // you can pass your own event emitter
