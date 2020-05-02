@@ -17,13 +17,13 @@ const PlayerControls = props => {
             * This enables projects to create/control the useability of the project.
             */
             var $container = $("body");
-            var $timeFormat = $container.find('.time-format');
+            // var $timeFormat = $container.find('.time-format');
             var $audioStart = $container.find('.audio-start');
             var $audioEnd = $container.find('.audio-end');
             var $time = $container.find('.audio-pos');
             var format = "seconds";
             var audioPos = 0;
-            var downloadUrl = undefined;
+            // var downloadUrl = undefined;
             
             function cueFormatters(format) {
             
@@ -90,51 +90,16 @@ const PlayerControls = props => {
               audioPos = time;
             }
             
-            updateSelect(startTime, endTime);
+            // updateSelect(startTime, endTime);
             updateTime(audioPos);
             
-            $container.on("click", ".btn-seektotime", function () {
-              var time = parseInt(document.getElementById("seektime").value, 10);
-              ee.emit("select", time, time);
-            });
+            // $container.on("change", ".time-format", function(e) {
+            //   format = $timeFormat.val();
+            //   ee.emit("durationformat", format);
             
-            $container.on("change", ".select-seek-style", function (node) {
-              playlist.setSeekStyle(node.target.value);
-            });
-            
-            //track drop
-            $container.on("dragenter", ".track-drop", function(e) {
-              e.preventDefault();
-              e.target.classList.add("drag-enter");
-            });
-            
-            $container.on("dragover", ".track-drop", function(e) {
-              e.preventDefault();
-            });
-            
-            $container.on("dragleave", ".track-drop", function(e) {
-              e.preventDefault();
-              e.target.classList.remove("drag-enter");
-            });
-            
-            $container.on("drop", ".track-drop", function(e) {
-              e.preventDefault();
-              e.target.classList.remove("drag-enter");
-            
-              var dropEvent = e.originalEvent;
-            
-              for (var i = 0; i < dropEvent.dataTransfer.files.length; i++) {
-                ee.emit("newtrack", dropEvent.dataTransfer.files[i]);
-              }
-            });
-            
-            $container.on("change", ".time-format", function(e) {
-              format = $timeFormat.val();
-              ee.emit("durationformat", format);
-            
-              updateSelect(startTime, endTime);
-              updateTime(audioPos);
-            });
+            //   updateSelect(startTime, endTime);
+            //   updateTime(audioPos);
+            // });
             
             $container.on("input change", ".master-gain", function(e){
               ee.emit("mastervolumechange", e.target.value);
@@ -152,95 +117,31 @@ const PlayerControls = props => {
               ee.emit("automaticscroll", $(e.target).is(':checked'));
             });
             
-            function displaySoundStatus(status) {
-              $(".sound-status").html(status);
-            }
+            // function displaySoundStatus(status) {
+            //   $(".sound-status").html(status);
+            // }
             
-            function displayLoadingData(data) {
-              var info = $("<div/>").append(data);
-              $(".loading-data").append(info);
-            }
+            // function displayLoadingData(data) {
+            //   var info = $("<div/>").append(data);
+            //   $(".loading-data").append(info);
+            // }
             
-            function displayDownloadLink(link) {
-              var dateString = (new Date()).toISOString();
-              var $link = $("<a/>", {
-                'href': link,
-                'download': 'waveformplaylist' + dateString + '.wav',
-                'text': 'Download mix ' + dateString,
-                'class': 'btn btn-small btn-download-link'
-              });
+            // function displayDownloadLink(link) {
+            //   var dateString = (new Date()).toISOString();
+            //   var $link = $("<a/>", {
+            //     'href': link,
+            //     'download': 'waveformplaylist' + dateString + '.wav',
+            //     'text': 'Download mix ' + dateString,
+            //     'class': 'btn btn-small btn-download-link'
+            //   });
             
-              $('.btn-download-link').remove();
-              $('.btn-download').after($link);
-            }
-            
-            
-            /*
-            * Code below receives updates from the playlist.
-            */
-            ee.on("select", updateSelect);
-            
-            ee.on("timeupdate", updateTime);
-            
-            ee.on("mute", function(track) {
-              displaySoundStatus("Mute button pressed for " + track.name);
-            });
-            
-            ee.on("solo", function(track) {
-              displaySoundStatus("Solo button pressed for " + track.name);
-            });
-            
-            ee.on("volumechange", function(volume, track) {
-              displaySoundStatus(track.name + " now has volume " + volume + ".");
-            });
-            
-            ee.on("mastervolumechange", function(volume) {
-              displaySoundStatus("Master volume now has volume " + volume + ".");
-            });
-            
-            
-            var audioStates = ["uninitialized", "loading", "decoding", "finished"];
-            
-            ee.on("audiorequeststatechange", function(state, src) {
-              var name = src;
-            
-              if (src instanceof File) {
-                name = src.name;
-              }
-            
-              displayLoadingData("Track " + name + " is in state " + audioStates[state]);
-            });
-            
-            ee.on("loadprogress", function(percent, src) {
-              var name = src;
-            
-              if (src instanceof File) {
-                name = src.name;
-              }
-            
-              displayLoadingData("Track " + name + " has loaded " + percent + "%");
-            });
-            
-            ee.on("audiosourcesloaded", function() {
-              displayLoadingData("Tracks have all finished decoding.");
-            });
-            
-            ee.on("audiosourcesrendered", function() {
-              displayLoadingData("Tracks have been rendered");
-            });
-            
-            ee.on('audiorenderingfinished', function (type, data) {
-              if (type === 'wav'){
-                if (downloadUrl) {
-                  window.URL.revokeObjectURL(downloadUrl);
-                }
-            
-                downloadUrl = window.URL.createObjectURL(data);
-                displayDownloadLink(downloadUrl);
-              }
-            });            
+            //   $('.btn-download-link').remove();
+            //   $('.btn-download').after($link);
+            // }
+                  
         }
       }, [playlist, ee, updateLooping, playoutPromises, startTime, endTime]);
+
       useEffect(() => {
         ee.on('finished', function () {
             console.log("The cursor has reached the end of the selection !");
@@ -251,7 +152,8 @@ const PlayerControls = props => {
               });
             }
           });
-    }, [isLooping, ee, playlist, playoutPromises, startTime, endTime])
+    }, [isLooping, ee, playlist, playoutPromises, startTime, endTime]);
+
     const toggleActive = node => {
         var active = node.parentNode.querySelectorAll('.active');
         var i = 0, len = active.length;
@@ -260,7 +162,7 @@ const PlayerControls = props => {
         }
       
         node.classList.toggle('active');
-    }
+    };
     const playVideo = () => {
         ee.emit("play");
     };
@@ -279,10 +181,10 @@ const PlayerControls = props => {
             ee.emit("zoomout");
         }
     };
-    const clearList = () => {
-        updateLooping(false);
-        ee.emit("clear");
-    };
+    // const clearList = () => {
+    //     updateLooping(false);
+    //     ee.emit("clear");
+    // };
     const cursorUpdate = e => {
         ee.emit("statechange", "cursor");
         toggleActive(e.target);

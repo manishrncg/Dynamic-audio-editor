@@ -3,32 +3,28 @@ import React from 'react';
 import '../static/css/form.scss';
 
 const Home = props => {
-    const {updateInputValue} = props;
+    const {updateInputValue, playlist} = props;
+    // retrieves the event emitter the playlist is using.
+    const ee = playlist && playlist.getEventEmitter();
     //track drop
-    // $container.on("dragenter", ".track-drop", function(e) {
-    //   e.preventDefault();
-    //   e.target.classList.add("drag-enter");
-    // });
-    
-    // $container.on("dragover", ".track-drop", function(e) {
-    //   e.preventDefault();
-    // });
-    
-    // $container.on("dragleave", ".track-drop", function(e) {
-    //   e.preventDefault();
-    //   e.target.classList.remove("drag-enter");
-    // });
-    
-    // const trackDropped = (e) => {
-    //   e.preventDefault();
-    //   e.target.classList.remove("drag-enter");
-    
-    //   var dropEvent = e.originalEvent;
-    
-    //   for (var i = 0; i < dropEvent.dataTransfer.files.length; i++) {
-    //     ee.emit("newtrack", dropEvent.dataTransfer.files[i]);
-    //   }
-    // };
+    const dragLeaveHandler = (e) => {
+      e.preventDefault();
+      e.target.classList.remove("drag-enter");
+    };
+    const dragEnterHandler = (e) => {
+        e.preventDefault();
+        e.target.classList.add("drag-enter");
+    };
+    const dragOverHandler = (e) => {
+      e.preventDefault();
+    };
+    const dropHandler = (e) => {
+      e.preventDefault();
+      e.target.classList.remove("drag-enter");
+      for (var i = 0; i < e.dataTransfer.files.length; i++) {
+        ee.emit("newtrack", e.dataTransfer.files[i]);
+      }
+    };
 
     return (
         <div className="upload-form-container text-center">            
@@ -44,8 +40,14 @@ const Home = props => {
             <div className="parent-for-center-div or">
                 <span>OR</span>
             </div>
-            <div className="track-drop parent-for-center-div" ></div>
-            {/* onClick={e => trackDropped(e)} */}
+            <div 
+              className="track-drop parent-for-center-div" 
+              draggable={true} 
+              onDragStart={e => dragEnterHandler} 
+              onDragOver={e => dragOverHandler(e)}
+              onDragEnd={e => dragLeaveHandler(e)}
+              onDrop={e => dropHandler(e)}
+            ></div>
         </div>
     )
 }
