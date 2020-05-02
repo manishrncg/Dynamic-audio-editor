@@ -1,15 +1,14 @@
 import React, {useState, useEffect} from 'react';
-import $ from "jquery";
 
 const PlayerFooter = props => {
     const {playlist} = props;
     const [seekTime, UpdateSeekTime] = useState();
+    const [format, UpdateFormat] = useState("seconds");
     let audioPos = 0, startTime = 0, endTime = 0;
     let downloadUrl = undefined;
-    // const [isLooping, updateLooping] = useState(false);
     // retrieves the event emitter the playlist is using.
     const ee = playlist && playlist.getEventEmitter();
-    const cueFormatters = format => {
+    const cueFormatters = () => {
         function clockFormat(seconds, decimals) {
           var hours,
               minutes,
@@ -49,7 +48,7 @@ const PlayerFooter = props => {
       
         return formats[format];
     };
-    const updateSelect = (start, end, format) => {
+    const updateSelect = (start, end) => {
         if (start < end) {
             document.querySelector('.btn-trim-audio').classList.remove('disabled');
             document.querySelector('.btn-loop').classList.remove('disabled');
@@ -57,13 +56,13 @@ const PlayerFooter = props => {
             document.querySelector('.btn-trim-audio').classList.add('disabled');
             document.querySelector('.btn-loop').classList.add('disabled');
         }      
-        document.querySelector('.audio-start').val(cueFormatters(format)(start));
-        document.querySelector('.audio-end').val(cueFormatters(format)(end));
+        document.querySelector('.audio-start').value = cueFormatters(format)(start);
+        document.querySelector('.audio-end').value = cueFormatters(format)(end);
       
         startTime = start;
         endTime = end;
     };
-    const updateTime = (time, format) => {
+    const updateTime = (time) => {
         document.querySelector('.audio-pos').innerHTML = cueFormatters(format)(time);
         audioPos = time;
     };
@@ -74,11 +73,11 @@ const PlayerFooter = props => {
     const timeFormatHandler = (e) => {
         const formatValue = e.target.value;
         ee.emit("durationformat", formatValue);
-      
+        UpdateFormat(formatValue);
         updateSelect(startTime, endTime, formatValue);
         updateTime(audioPos, formatValue);
     };
-    function displayDownloadLink(link) {
+    const displayDownloadLink = (link) => {
         let dateString = (new Date()).toISOString();
         let $link = document.createElement("a");
         $link.href = link;
@@ -90,6 +89,9 @@ const PlayerFooter = props => {
         }
         document.querySelector('.btn-download').parentElement.appendChild($link);
     }
+    const masterGain = (e) => {
+        ee.emit("mastervolumechange", e.target.value);
+    };
 
     useEffect(() => {
         /*
@@ -124,7 +126,7 @@ const PlayerFooter = props => {
         });
         
         
-        var audioStates = ["uninitialized", "loading", "decoding", "finished"];
+        // var audioStates = ["uninitialized", "loading", "decoding", "finished"];
         
         ee.on("audiorequeststatechange", function(state, src) {
             var name = src;
@@ -168,9 +170,8 @@ const PlayerFooter = props => {
 
     return (
         <div className="playlist-bottom-bar">
-            <div class="sound-status"></div>
             <form className="form-inline">
-                <select className="time-format form-control" onChange={e => timeFormatHandler}>
+                <select className="time-format form-control" onChange={e => timeFormatHandler(e)}>
                 <option value="seconds" selected="selected">seconds</option>
                 <option value="thousandths">thousandths</option>
                 <option value="hh:mm:ss">hh:mm:ss</option>
@@ -185,13 +186,22 @@ const PlayerFooter = props => {
             <form className="form-inline">
                 <div className="form-group">
                 <label htmlFor="master-gain">Master Volume</label>
-                <input type="range" min="0" max="100" defaultValue="100" className="master-gain form-control" id="master-gain"/>
+                <input 
+                    type="range" 
+                    min="0" 
+                    max="100" 
+                    className="master-gain form-control" 
+                    id="master-gain"
+                    defaultValue="100" 
+                    onChange={e => masterGain(e)}
+                />
                 </div>
-                <div className="checkbox">
+                {/* <div className="checkbox">
                 <label>
                     <input type="checkbox" className="automatic-scroll" /> Automatic Scroll
                 </label>
-                </div>
+                </div> */}
+                <div class="sound-status"></div>
             </form>
             <form className="form-inline">
                 <div className="control-group">
