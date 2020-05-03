@@ -4,6 +4,7 @@ const PlayerFooter = props => {
     const {playlist} = props;
     const [seekTime, UpdateSeekTime] = useState();
     const [format, UpdateFormat] = useState("seconds");
+    const [playbackSpeed, UpdatePlaybackSpeed] = useState(1);
     let audioPos = 0, startTime = 0, endTime = 0;
     // let downloadUrl = undefined;
     // retrieves the event emitter the playlist is using.
@@ -94,6 +95,7 @@ const PlayerFooter = props => {
     };
     const speedUpdateHandler = (e) => {
         const speed = e.target.value;
+        UpdatePlaybackSpeed(speed);
         ee.emit("speedchange", speed);
     }
 
@@ -169,7 +171,7 @@ const PlayerFooter = props => {
                     <input 
                         type="range" 
                         min="0.5" 
-                        max="1" 
+                        max="4" 
                         step="0.1"
                         className="master-gain form-control" 
                         id="master-gain"
@@ -177,7 +179,7 @@ const PlayerFooter = props => {
                         onChange={e => speedUpdateHandler(e)}
                     />
                 </div>
-                <div className="sound-status"></div>
+                <span className="playback-speed">{playbackSpeed}x</span>
             </form>
             <form className="form-inline">
                 <div className="control-group">

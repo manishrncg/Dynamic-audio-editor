@@ -321,13 +321,16 @@ var _class = function () {
         track.setGainLevel(volume / 100);
       });
 
-      ee.on('mastervolumechange', function (speed) {
-        track.setSpeed(speed);
-      });
-
-      ee.on('speedchanged', function (volume) {
+      ee.on('mastervolumechange', function (volume) {
+        _this2.masterGain = volume / 100;
         _this2.tracks.forEach(function (track) {
           track.setMasterGainLevel(_this2.masterGain);
+        });
+      });
+
+      ee.on('speedchanged', function (speed) {
+        _this2.tracks.forEach(function (track) {
+          track.setSpeed(speed);
         });
       });
 
