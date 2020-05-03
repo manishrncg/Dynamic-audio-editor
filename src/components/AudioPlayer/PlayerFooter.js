@@ -92,6 +92,10 @@ const PlayerFooter = props => {
     const masterGain = (e) => {
         ee.emit("mastervolumechange", e.target.value);
     };
+    const speedUpdateHandler = (e) => {
+        const speed = e.target.value;
+        ee.emit("speedchange", speed);
+    }
 
     useEffect(() => {
         /*
@@ -155,6 +159,22 @@ const PlayerFooter = props => {
                         id="master-gain"
                         defaultValue="100" 
                         onChange={e => masterGain(e)}
+                    />
+                </div>
+                <div className="sound-status"></div>
+            </form>
+            <form className="form-inline">
+                <div className="form-group">
+                    <label htmlFor="master-gain">Speed change</label>
+                    <input 
+                        type="range" 
+                        min="0.5" 
+                        max="1" 
+                        step="0.1"
+                        className="master-gain form-control" 
+                        id="master-gain"
+                        defaultValue="1" 
+                        onChange={e => speedUpdateHandler(e)}
                     />
                 </div>
                 <div className="sound-status"></div>
