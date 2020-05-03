@@ -1,14 +1,20 @@
 {
-  "name": "auedio-editor",
+  "name": "audio-editor",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": "8.11.3"
+  },
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
+    "node-sass": "^4.14.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-scripts": "3.4.1"
+    "react-router-dom": "^5.1.2",
+    "react-scripts": "3.4.1",
+    "waveform-playlist": "https://github.com/manishrncg/waveform-playlist/tarball/master"
   },
   "scripts": {
     "start": "react-scripts start",
