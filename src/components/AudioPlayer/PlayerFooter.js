@@ -12,12 +12,11 @@ const PlayerFooter = props => {
     const [format, UpdateFormat] = useState("seconds");
     const [playbackSpeed, UpdatePlaybackSpeed] = useState(1);
     const [audioPos, UpdateAudioPos] = useState(0);
-    // const [startTime, UpdateStartTime] = useState(0);
-    // const [endTime, UpdateEndTime] = useState(0);
+    const [audioStatus, UpdateAudioStatus] = useState(0);
     // retrieves the event emitter the playlist is using.
     const ee = playlist && playlist.getEventEmitter();
     const cueFormatters = useCallback(() => {
-        function clockFormat(seconds, decimals) {
+        const clockFormat = (seconds, decimals) => {
           var hours,
               minutes,
               secs,
@@ -56,6 +55,7 @@ const PlayerFooter = props => {
       
         return formats[format];
     }, [format]);
+
     const updateSelect = useCallback((start, end) => {
         if (start < end) {
             document.querySelector('.btn-trim-audio').classList.remove('disabled');
@@ -68,10 +68,10 @@ const PlayerFooter = props => {
         UpdateStartTime(start);
         UpdateEndTime(end);
     }, [format, UpdateStartTime, UpdateEndTime, cueFormatters]);
-    const updateTime = useCallback((time) => {
-        document.querySelector('.audio-pos').innerHTML = cueFormatters(format)(time);
-        UpdateAudioPos(time);
-    }, [format, UpdateAudioPos, cueFormatters]);
+
+    const muteTrack = (track) => {
+        UpdateAudioStatus("Mute button pressed for " + track.name);
+    };
     const seektTimeHandler = () => {
         var time = parseInt(seekTime, 10);
         ee.emit("select", time, time);
@@ -81,7 +81,7 @@ const PlayerFooter = props => {
         ee.emit("durationformat", formatValue);
         UpdateFormat(formatValue);
         updateSelect(startTime, endTime, formatValue);
-        updateTime(audioPos, formatValue);
+        UpdateAudioPos(audioPos);
     };
     const displayDownloadLink = (link) => {
         let dateString = (new Date()).toISOString();
@@ -108,28 +108,21 @@ const PlayerFooter = props => {
         /*
         * Code below receives updates from the playlist.
         */
-        function displaySoundStatus(status) {
-            document.querySelector(".sound-status").innerHTML = status;
-        }
-        
+
         ee.on("select", updateSelect);
-        
-        ee.on("timeupdate", updateTime);
-        
-        ee.on("mute", function(track) {
-            displaySoundStatus("Mute button pressed for " + track.name);
-        });
+        ee.on("timeupdate", UpdateAudioPos);
+        ee.on("mute", muteTrack);
         
         ee.on("solo", function(track) {
-            displaySoundStatus("Solo button pressed for " + track.name);
+            UpdateAudioStatus("Solo button pressed for " + track.name);
         });
         
         ee.on("volumechange", function(volume, track) {
-            displaySoundStatus(track.name + " now has volume " + volume + ".");
+            UpdateAudioStatus(track.name + " now has volume " + volume + ".");
         });
         
         ee.on("mastervolumechange", function(volume) {
-            displaySoundStatus("Master volume now has volume " + volume + ".");
+            UpdateAudioStatus("Master volume now has volume " + volume + ".");
         });
            
         ee.on('audiorenderingfinished', function (type, data) {
@@ -138,7 +131,16 @@ const PlayerFooter = props => {
                 displayDownloadLink(downloadUrl);
             }
         });
-    }, [playlist, ee, updateSelect, updateTime]);
+
+        return () => {
+            ee.off("select", updateSelect);
+            ee.off("timeupdate", UpdateAudioPos);
+            ee.off("mute", muteTrack);
+            ee.off("solo", function(track) {
+                UpdateAudioStatus("Solo button pressed for " + track.name);
+            });
+        }
+    }, [ee, updateSelect]);
 
     return (
         <div className="playlist-bottom-bar">
@@ -153,7 +155,7 @@ const PlayerFooter = props => {
                 </select>
                 <input type="text" className="audio-start input-small form-control" />
                 <input type="text" className="audio-end form-control" />
-                <label className="audio-pos">00:00:00</label>
+                <label className="audio-pos">{cueFormatters(format)(audioPos)}</label>
             </form>
             <form className="form-inline">
                 <div className="form-group">
@@ -168,7 +170,7 @@ const PlayerFooter = props => {
                         onChange={e => masterGain(e)}
                     />
                 </div>
-                <div className="sound-status"></div>
+                <div className="sound-status">{audioStatus}</div>
             </form>
             <form className="form-inline">
                 <div className="form-group">
