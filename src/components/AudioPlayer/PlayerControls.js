@@ -1,25 +1,19 @@
 import React, {useEffect, useState} from 'react';
 
 const PlayerControls = props => {
-    const {playlist} = props;
+    const {playlist, startTime, endTime} = props;
     const [isLooping, updateLooping] = useState(false);
     // retrieves the event emitter the playlist is using.
     const ee = playlist && playlist.getEventEmitter();
-    let playoutPromises;
-    let startTime = 0;
-    let endTime = 0;
 
     useEffect(() => {
         ee.on('finished', function () {
-            console.log("The cursor has reached the end of the selection !");
-          
-            if (isLooping && playoutPromises) {
-              playoutPromises.then(function() {
-                playoutPromises = playlist.play(startTime, endTime);
-              });
+            console.log(isLooping, startTime, endTime, "The cursor has reached the end of the selection !");
+            if (isLooping) {
+                playlist.play(startTime, endTime);
             }
           });
-    }, [isLooping, ee, playlist, playoutPromises, startTime, endTime]);
+    }, [isLooping, ee, playlist, startTime, endTime]);
 
     const toggleActive = node => {
         var active = node.parentNode.querySelectorAll('.active');
@@ -30,10 +24,10 @@ const PlayerControls = props => {
       
         node.classList.toggle('active');
     };
-    const playVideo = () => {
+    const playAudio = () => {
         ee.emit("play");
     };
-    const pauseVideo = () => {
+    const pauseAudio = () => {
         updateLooping(false);
         ee.emit("pause");
     };
@@ -53,8 +47,9 @@ const PlayerControls = props => {
         toggleActive(e.target);
     };
     const playFromLastSelection = () => {
-        updateLooping(true);
-        playoutPromises = playlist.play(startTime, endTime);
+        console.log(isLooping);
+        updateLooping(!isLooping);
+        playlist.play(startTime, endTime);        
     };
     const select = e => {
         ee.emit("statechange", "select");
@@ -108,10 +103,10 @@ const PlayerControls = props => {
         <div id="top-bar" className="playlist-top-bar">
             <div className="playlist-toolbar">
                 <div className="btn-group">
-                <span className="btn-pause btn btn-warning" onClick={pauseVideo}>
+                <span className="btn-pause btn btn-warning" onClick={pauseAudio}>
                     <i className="fa fa-pause"></i>
                 </span>
-                <span className="btn-play btn btn-success" onClick={playVideo}>
+                <span className="btn-play btn btn-success" onClick={playAudio}>
                     <i className="fa fa-play"></i>
                 </span>
                 <span className="btn-stop btn btn-danger" onClick={stopAudio}>
@@ -150,7 +145,7 @@ const PlayerControls = props => {
                 <span className="btn btn-default btn-scurve" onClick={e => scurveWave(e)}>s-curve</span>
                 </div>
                 <div className="btn-group btn-select-state-group">
-                <span className="btn-loop btn btn-success disabled" title="loop a selected segment of audio" onClick={playFromLastSelection}>
+                <span className={"btn-loop btn btn-success " + (isLooping && "active")} title="loop a selected segment of audio" onClick={playFromLastSelection}>
                     <i className="fa fa-repeat"></i>
                 </span>
                 <span title="keep only the selected audio region for a track" className="btn-trim-audio btn btn-primary disabled" onClick={trimAudio}>Trim</span>

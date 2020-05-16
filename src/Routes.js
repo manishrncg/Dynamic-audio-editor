@@ -9,7 +9,6 @@ const Routes = () => {
             <Suspense fallback={<div>Loading...</div>}>
                 <Switch>
                     <Route path='/' component={Home} />
-                    {/* <Route component={GenericNotFound} /> */}
                 </Switch>
             </Suspense>
         </Router>

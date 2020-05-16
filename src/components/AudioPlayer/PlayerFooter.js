@@ -1,15 +1,22 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 
 const PlayerFooter = props => {
-    const {playlist} = props;
+    const {
+        playlist, 
+        startTime,
+        UpdateStartTime,
+        endTime,
+        UpdateEndTime
+    } = props;
     const [seekTime, UpdateSeekTime] = useState();
     const [format, UpdateFormat] = useState("seconds");
     const [playbackSpeed, UpdatePlaybackSpeed] = useState(1);
-    let audioPos = 0, startTime = 0, endTime = 0;
-    // let downloadUrl = undefined;
+    const [audioPos, UpdateAudioPos] = useState(0);
+    // const [startTime, UpdateStartTime] = useState(0);
+    // const [endTime, UpdateEndTime] = useState(0);
     // retrieves the event emitter the playlist is using.
     const ee = playlist && playlist.getEventEmitter();
-    const cueFormatters = () => {
+    const cueFormatters = useCallback(() => {
         function clockFormat(seconds, decimals) {
           var hours,
               minutes,
@@ -48,25 +55,23 @@ const PlayerFooter = props => {
         };
       
         return formats[format];
-    };
-    const updateSelect = (start, end) => {
+    }, [format]);
+    const updateSelect = useCallback((start, end) => {
         if (start < end) {
             document.querySelector('.btn-trim-audio').classList.remove('disabled');
-            document.querySelector('.btn-loop').classList.remove('disabled');
         }else {
             document.querySelector('.btn-trim-audio').classList.add('disabled');
-            document.querySelector('.btn-loop').classList.add('disabled');
         }      
         document.querySelector('.audio-start').value = cueFormatters(format)(start);
         document.querySelector('.audio-end').value = cueFormatters(format)(end);
-      
-        startTime = start;
-        endTime = end;
-    };
-    const updateTime = (time) => {
+
+        UpdateStartTime(start);
+        UpdateEndTime(end);
+    }, [format, UpdateStartTime, UpdateEndTime, cueFormatters]);
+    const updateTime = useCallback((time) => {
         document.querySelector('.audio-pos').innerHTML = cueFormatters(format)(time);
-        audioPos = time;
-    };
+        UpdateAudioPos(time);
+    }, [format, UpdateAudioPos, cueFormatters]);
     const seektTimeHandler = () => {
         var time = parseInt(seekTime, 10);
         ee.emit("select", time, time);
@@ -133,7 +138,7 @@ const PlayerFooter = props => {
                 displayDownloadLink(downloadUrl);
             }
         });
-    }, [playlist, ee]);
+    }, [playlist, ee, updateSelect, updateTime]);
 
     return (
         <div className="playlist-bottom-bar">

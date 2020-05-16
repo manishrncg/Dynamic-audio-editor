@@ -7,6 +7,8 @@ import '../../static/css/playlist.scss';
 const AudioPlayer = props => {
     const {playlist} = props;
     const [srcRenderState, updatesrcRenderState] = useState(0);
+    const [startTime, UpdateStartTime] = useState(0);
+    const [endTime, UpdateEndTime] = useState(0);
     const ee = playlist && playlist.getEventEmitter();
     useEffect(() => {
         if(playlist && ee){
@@ -19,12 +21,22 @@ const AudioPlayer = props => {
     }, [playlist, ee])
     const renderControls = () => {
         if(srcRenderState === 3){
-            return <PlayerControls playlist={playlist} />;
+            return <PlayerControls 
+                playlist={playlist} 
+                startTime={startTime}
+                endTime={endTime}
+            />;
         }         
     }
     const renderFooter = () => {
         if(srcRenderState === 3){
-            return <PlayerFooter playlist={playlist} />;
+            return <PlayerFooter 
+                playlist={playlist} 
+                startTime={startTime}
+                UpdateStartTime={UpdateStartTime}
+                endTime={endTime}
+                UpdateEndTime={UpdateEndTime} 
+            />;
         }         
     }
     
